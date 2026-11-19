@@ -1115,7 +1115,7 @@ class TestLaunchRules(VlmCase):
         self.assertEqual(proc.returncode, EXIT_OK, describe(proc))
         line = proc.stdout.strip()
         self.assertEqual(len(proc.stdout.strip().splitlines()), 1)                     # no sidecar
-        for tok in ("--runtime=nvidia --gpus all", "--network none", "--user 1000:1000", "--shm-size=16g",
+        for tok in ("--runtime=nvidia --gpus all", "--network none", f"--user {V.run_user()}", "--shm-size=16g",
                     "--ulimit memlock=-1", "--ulimit nofile=65535:65535", "-w /opt/nemo-rl",
                     f"{V.IMAGE} {V.TRAIN_PY} {V.AREA7}/run_vlm_nemo.py --profile smoke"):
             self.assertIn(tok, line)

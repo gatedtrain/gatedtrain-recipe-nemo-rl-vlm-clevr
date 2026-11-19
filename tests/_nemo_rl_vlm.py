@@ -35,9 +35,11 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import pwd
 import re
 import shutil
 import struct
+import unittest
 from pathlib import Path
 from typing import Any, Callable
 
@@ -53,6 +55,17 @@ VLM = EXT / "vlm"
 PROBE = VLM / "probe-a6"
 REAL_ARM = VLM / "real-arm"
 ADAPTER = "nemo_rl_vlm"
+
+
+def run_user() -> str:
+    """The container's `<uid>:<gid>` in fixture requests and records: the uid running the tests and its primary group,
+    so the output directories the tests create are owned by the container's uid (EXT-63) whoever runs them. The launch
+    rules refuse root, so a test that needs it skips under uid 0."""
+    uid = os.getuid()
+    if uid == 0:
+        raise unittest.SkipTest("the launch rules refuse a container running as root (uid 0); run the tests as a "
+                                "non-root user")
+    return f"{uid}:{pwd.getpwuid(uid).pw_gid}"
 
 
 def renamed_copy(path: Path) -> Path:
@@ -680,7 +693,7 @@ class VlmScenario:
                "runtime": {"kind": "container", "image": IMAGE, "venv_lock_sha256": None},
                "framework": {"name": "nemo_rl", "version": NEMO_RL_COMMIT, "commit": NEMO_RL_COMMIT},
                "training_seed": SEED, "gpus": True, "argv": self.argv(), "mounts": self.mounts(self.out),
-               "tmpfs": ["/tmp"], "network": "none", "network_reason": None, "user": "1000:1000",
+               "tmpfs": ["/tmp"], "network": "none", "network_reason": None, "user": run_user(),
                "env_names": list(ENV_NAMES), "gpu_est_h": 1.0, "gpu_used_h": 6.0, "output_dir": str(self.out),
                "output_root": str(self.output_root),
                "gpu_step_sha256": file_sha256(self.host_work / "bin" / "gpu-step.sh"), "allow_network": False,
@@ -703,7 +716,7 @@ class VlmScenario:
         req = {"area": 7, "label": "mm-a7-vlm-smoke", "host_work": str(self.host_work),
                "runtime": {"kind": "container", "image": IMAGE},
                "framework": {"name": "nemo_rl", "version": NEMO_RL_COMMIT, "commit": NEMO_RL_COMMIT},
-               "training_seed": SEED, "gpus": True, "network": "none", "network_reason": None, "user": "1000:1000",
+               "training_seed": SEED, "gpus": True, "network": "none", "network_reason": None, "user": run_user(),
                "env": dict(TRAIN_ENV), "mounts": self.mounts(out), "tmpfs": ["/tmp"], "output_dir": str(out),
                "gpu_est_h": 0.15, "argv": self.argv("smoke")}
         req.update(overrides)
@@ -735,7 +748,7 @@ class VlmScenario:
         req.update({"area": 7, "label": f"mm-a7-{script[:-3].replace('_', '-')}", "host_work": str(self.host_work),
                     "runtime": {"kind": "container", "image": IMAGE},
                     "framework": {"name": "nemo_rl", "version": NEMO_RL_COMMIT, "commit": NEMO_RL_COMMIT},
-                    "training_seed": 0, "network": "none", "network_reason": None, "user": "1000:1000",
+                    "training_seed": 0, "network": "none", "network_reason": None, "user": run_user(),
                     "tmpfs": ["/tmp"], "output_dir": str(out)})
         req.update(overrides)
         return req
