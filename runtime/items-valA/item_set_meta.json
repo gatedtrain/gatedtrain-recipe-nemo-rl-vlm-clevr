@@ -1,0 +1,40 @@
+{
+  "answers": {
+    "0": 121,
+    "1": 94,
+    "10": 11,
+    "2": 57,
+    "3": 41,
+    "4": 16,
+    "5": 14,
+    "6": 19,
+    "7": 16,
+    "8": 15,
+    "9": 17,
+    "no": 54,
+    "yes": 25
+  },
+  "images_dir": "data/images",
+  "license": "source CLEVR-CoGenT v1.0, CC BY 4.0 (https://cs.stanford.edu/people/jcjohns/clevr/); the MMInstruction repackaging declares no licence",
+  "n_items": 500,
+  "schema": "ptc_mm.vlm_items",
+  "schema_version": "1.0",
+  "seed": 20261114,
+  "selection": "random.Random('20261114:items:valA').sample",
+  "source": {
+    "bytes": 410574295,
+    "files": {
+      "data/train-00000-of-00002.parquet": {
+        "bytes": 410574295,
+        "sha256": "sha256:6ce2e1253997a14b33a02c51add23a07394ba1c1bec0e80bbdb39fb7b8ef64df"
+      }
+    },
+    "repo": "MMInstruction/Clevr_CoGenT_ValA",
+    "revision": "f786093c7bb7b45684d8d5791e3fc8726a427233"
+  },
+  "split": "valA",
+  "tags": [
+    "prototype",
+    "unpromotable"
+  ]
+}

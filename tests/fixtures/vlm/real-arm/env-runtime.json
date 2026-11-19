@@ -1,0 +1,12 @@
+{
+  "code_sha256": {
+    "score_vqa.py": "sha256:f527e4f145b56beddbadca4f82bc77a6558f86f93c9e3343711db17c66481727"
+  },
+  "executable": "/srv/ptc/python/bin/python3.15",
+  "gen_meta_sha256": "sha256:5df4feceecde5934baf0d01077fada33a98a1869fed06e0af02baa06aa5578f7",
+  "gid": 1000,
+  "items_sha256": "sha256:5e442332eb25cd42bddfaacbcc9926463ea1c343cc24ca7295e6293f1271bc2e",
+  "python": "3.15.2",
+  "scorer_code_sha256": "sha256:f3eaba291f439827fa93115b6aebed5d18e8c5b0054013c87f3292de2719abaf",
+  "uid": 1000
+}

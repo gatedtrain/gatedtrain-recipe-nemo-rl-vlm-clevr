@@ -1,0 +1,38 @@
+[project]
+name = "gatedtrain-recipe-nemo-rl-vlm-clevr"
+version = "0.1.0"
+description = "gatedtrain recipe: NeMo RL VLM GRPO of Qwen3.5-0.8B on CLEVR-CoGenT, with its gatedtrain adapter `nemo_rl_vlm` (prototype)."
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE", "THIRD_PARTY_NOTICES.md"]
+authors = [{name = "The gatedtrain Authors"}]
+requires-python = ">=3.12,<3.14"
+keywords = ["gatedtrain", "post-training", "nemo-rl", "grpo", "vision-language-model", "vqa", "clevr"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+# The adapter is pure Python; training, generation and scoring run runtime/'s scripts in the pinned NeMo RL image
+# (gatedtrain.families.nemo_rl), so runtime/ has no environment of its own.
+dependencies = ["gatedtrain>=0.3,<0.4"]
+
+[project.urls]
+Homepage = "https://github.com/gatedtrain/gatedtrain-recipe-nemo-rl-vlm-clevr"
+Source = "https://github.com/gatedtrain/gatedtrain-recipe-nemo-rl-vlm-clevr"
+Issues = "https://github.com/gatedtrain/gatedtrain-recipe-nemo-rl-vlm-clevr/issues"
+
+[project.entry-points."gatedtrain.adapters"]
+nemo_rl_vlm = "gatedtrain_recipe_nemo_rl_vlm_clevr.rows:PLUGIN"
+
+[build-system]
+requires = ["setuptools>=78"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

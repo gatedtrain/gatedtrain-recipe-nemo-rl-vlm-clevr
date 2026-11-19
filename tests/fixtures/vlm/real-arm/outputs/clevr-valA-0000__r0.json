@@ -1,0 +1,17 @@
+{
+  "item": "clevr-valA-0000",
+  "parsed_answer": "yes",
+  "question": "How many big objects are gray things or red metal spheres?",
+  "reference": "1",
+  "repeat": 0,
+  "response": "The objects in the image are:\n1.  A small blue cube.\n2.  A large purple cylinder.\n3.  A large gray cube.\n\nLet's evaluate the condition \"big objects gray things or red metal spheres\":\n-   **Big objects gray things**: The gray cube is a big object.\n-   **Red metal spheres**: There are no red metal spheres in the image.\n\nSince there is at least one big gray object, the condition is satisfied.\n\nYes",
+  "score": 0.0,
+  "seed": 11,
+  "sub_metrics": {
+    "answer_found": 1,
+    "answer_tagged": 0,
+    "is_yes_no": 0,
+    "n_new_tokens": 104,
+    "truncated": 0
+  }
+}

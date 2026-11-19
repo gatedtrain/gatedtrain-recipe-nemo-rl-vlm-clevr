@@ -1,0 +1,32 @@
+# Spec of the gatedtrain 0.3.0 amendment registration-gatedtrain.yaml (version-only); otherwise spec-ptc-hub.yaml.
+# Area "VLM" workflow: NeMo RL VLM GRPO of Qwen3.5-0.8B (vision tower frozen) on CLEVR-CoGenT TrainA, gated on
+# exact_match of 500 held-out ValA items against the base model (gatedtrain's MULTIMODAL-SPEC row 7; runtime/README.md;
+# the maintainers' decisions "Area 7 decisions"). prototype, unpromotable.
+# base: models/qwen3.5-0.8b (Qwen/Qwen3.5-0.8B @ 2fc06364...); train: data/shards (concatenated into data/train.jsonl);
+# items: the registered set (items-valA, 500). `gatedtrain run` refuses this spec.
+workflow: mm-a7-vlm-grpo
+version: 1
+budget: {gpu_hours: 24}
+artifacts:
+  base:         {type: model_checkpoint, uri: "file:<mm-root>/area7-vlm/models/qwen3.5-0.8b@sha256:8a5cb2e1cc21cb87dde57284666e4fffb5310b42df5bbe3c5d019685df15e9c1"}
+  train:        {type: training_dataset, uri: "file:<mm-root>/area7-vlm/data/shards@sha256:6f8fc57a70773f2af9564a06151f51fc9bb0b9cf992048d7c6eaab1ee9d98bfe"}
+  items:        {type: item_set, uri: "file:<mm-root>/area7-vlm/items-valA@sha256:874cd934503022e32660523bdf652ebd6b957c905b46b90da8f88ebc0e00a9f8", disjoint_from: [train]}
+  trainer_cfg:  {type: trainer_config, uri: "file:trainer.yaml@sha256:17460dd754dffb1e05fbbf1965d70e33a5e2fa71134f77cf8113b059d4ceb871"}
+  registration: {type: registration, uri: "file:registration-gatedtrain.yaml@sha256:7758f515362bfaa476c34481d1164f78339a897a74bfd32283a42ac5b2b525d0"}
+stages:
+  - id: grpo
+    uses: rl.nemo_rl_vlm@0.1
+    algorithm: grpo
+    model_family: vlm.qwen3_5@0.1
+    inputs: {model: base, data: train, config: trainer_cfg}
+    outputs: {model: ckpt}
+  - id: quality_gate
+    uses: gate.superiority@1.0
+    evaluator: vqa.clevr_items@0.1
+    sampler: deployment
+    inputs: {model: ckpt, baseline: base, items: items, registration: registration}
+    # mde equals the registration's planning_effect (G-4).
+    test: {metric: exact_match, alpha: 0.025, power: 0.80, mde: 0.15, cluster_by: item, seeds: 1}
+    on_fail: stop
+    owner: skeleton-demo
+    escalation: [skeleton-demo-lead]

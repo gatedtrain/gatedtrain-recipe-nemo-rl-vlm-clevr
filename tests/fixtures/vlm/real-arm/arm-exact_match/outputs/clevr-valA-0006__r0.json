@@ -1,0 +1,17 @@
+{
+  "item": "clevr-valA-0006",
+  "parsed_answer": "2",
+  "question": "How many large objects are either spheres or blue cubes?",
+  "reference": "2",
+  "repeat": 0,
+  "response": "Step 1: Identify all objects in the image.\n- There is a large gold cube.\n- There is a large yellow cube.\n- There is a large purple sphere.\n- There is a large blue cube.\n\nStep 2: Filter the objects based on the criteria \"spheres or blue cubes\".\n- The large gold cube is not a sphere and is not a blue cube.\n- The large yellow cube is not a sphere and is not a blue cube.\n- The large purple sphere is a sphere.\n- The large blue cube is a blue cube.\n\nStep 3: Count the objects that meet the criteria.\n- The large purple sphere counts as 1.\n- The large blue cube counts as 1.\n\nStep 4: Sum the counts.\n- Total count = 1 + 1 = 2.\n\n2",
+  "score": 1.0,
+  "seed": 11,
+  "sub_metrics": {
+    "answer_found": 1,
+    "answer_tagged": 0,
+    "is_yes_no": 0,
+    "n_new_tokens": 182,
+    "truncated": 0
+  }
+}

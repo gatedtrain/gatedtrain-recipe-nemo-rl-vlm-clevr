@@ -1,0 +1,89 @@
+# Amendment for the rename to ptc-hub 0.2.0 (05 section 3.7, R17-1/R17-3).
+# Area "VLM" gate pre-registration: NeMo RL VLM GRPO of Qwen3.5-0.8B (vision tower frozen) on CLEVR-CoGenT TrainA
+# against the base model, on 500 held-out ValA items (runtime/README.md; ptc's MULTIMODAL-SPEC row 7; the maintainers'
+# decisions "Area 7 decisions"). prototype, unpromotable. Unsigned: no named team has signed it. Values fixed after the smoke run
+# and before the full run's first START in gpu-guard.log. Deciding T3 metric `exact_match` (score_vqa.py's own answer
+# parser: after the last </think>, the last <answer> block if any, its last integer, number word or yes/no token; binary;
+# higher is better), blocking, construct-aligned with the training reward (format 0.2 + exact_alnum 0.8; R15-1) and with
+# references from the training answers' annotation process (R16-1), both disclosed below; superiority with margin 0;
+# alpha 0.025 one-sided, power 0.8, m = 1; N 500, K 1 (greedy), eval seed 11. sigma_plan fixed 1.14 =
+# max(1.5 x ucb80(s_pilot), sqrt(2) x ucb80(s_base)) from the smoke (s_pilot 0.6407 = SD of 20 paired differences, smoke
+# cut 5 minus the base; s_base 0.4894; ucb80 with 19 df factor 1.1770: 0.7541, 0.5760; 1.5 x 0.7541 = 1.131,
+# sqrt(2) x 0.5760 = 0.815; rounded up). Planning effect 0.15: n_required = ceil(((1.95996 + 0.84162) x 1.14 / 0.15)^2)
+# = 454 <= 500 (MDE at N 500: 0.143). ValB (condition B) is reported only (vqa.clevr_valb_items@0.1, not gating). Any
+# later change is an amendment: a new registration with `amends` and a new hash in spec.yaml (05:166).
+registration_version: 1
+registration_id: mm-a7-vlm-exact-match-superiority-v1
+signed_by: prototype-unsigned
+created_at: "2026-11-17T18:29:42Z"
+amends: "sha256:504eadce5145024c0f3e0f8edc2f646d0d10d79d431eb43309ef34ae35e3ea7c"
+workflow: mm-a7-vlm-grpo
+gate: quality_gate
+clause:
+  type: superiority
+  metric: exact_match
+  direction: higher_is_better
+  margin: 0.0
+  alpha: 0.025
+  power: 0.8
+  planning_effect: 0.15
+  sigma_plan: fixed
+  unit: item
+  samples_per_item: 1
+  eval_seeds: [11]
+  interval: cluster_bootstrap
+  blocking: true
+margin_justification: >-
+  Superiority with delta_sup = 0: any held-out gain of exact-match accuracy over the base model counts. Prototype value,
+  not reviewed by a named team.
+sigma_pilot:
+  sigma: 1.14
+  source: >-
+    GPU smoke (records/area7-vlm/train-smoke-1, cut 5, with eval-smoke-base-1 and eval-smoke-cut-1): the first 20
+    registered ValA items, seed 11, the deployment sampler (vLLM greedy). Paired differences of exact_match, smoke cut 5
+    minus the base: mean +0.10, SD 0.641 (8 discordant pairs, 5 up and 3 down); base item SD 0.489. sigma_plan =
+    max(1.5 x ucb80(0.641), sqrt(2) x ucb80(0.489)) = 1.131, rounded up to 1.14.
+baseline_pilot_mean: 0.35    # base, 20 smoke items (sd 0.489; the 100-item CPU-scored probe gave 0.44)
+construct_alignment: >-
+  exact_match counts a held-out answer correct when score_vqa.py's own parser (the last <answer> block if any, else the
+  whole response after the last </think>; its last integer, number word or yes/no token, number words as digits) equals
+  the reference; the training reward (NeMo RL's VLM environment, format 0.2 + exact_answer_alphanumeric 0.8) also pays for
+  correct answers, but only inside <answer> tags and by alphanumeric string equality. The base model never writes the
+  tags (0 of 20 smoke items; the smoke cut 12 of 20) and is scored here on its untagged final answer, so a pass is not
+  the tag format alone. A pass shows that the model answers more held-out CLEVR questions correctly under an
+  independent parser, partly through the answer format the reward pays for, not a general gain in visual reasoning.
+shared_annotation: >-
+  The references of exact_match are held-out CLEVR-CoGenT ValA answers made by the same CLEVR functional-program
+  executor over the same scene generator as the TrainA training answers (integers 0 to 10 or yes/no); no training stage
+  consumed them (different scenes; image and (image, question) overlap 0), so the programmatic scorer stays T3 (05
+  section 6.1, R16-1). Part of a gain may be learning that answer convention (a single count or yes/no): a pass shows
+  more correct CLEVR answers on unseen scenes of the training condition, not a general gain in visual question
+  answering.
+eval_distribution:
+  item_set_hash: "sha256:874cd934503022e32660523bdf652ebd6b957c905b46b90da8f88ebc0e00a9f8"   # manifest of area7-vlm/items-valA/
+# The deployment sampler (gen_vqa.py SAMPLER plus the backend and the prompt block hash; every cut's sampler.json).
+sampler: {"backend": "vllm", "chat_template": "checkpoint processor chat template, add_generation_prompt=True, no template kwargs (Qwen3.5 non-thinking)", "max_model_len": 1024, "max_new_tokens": 512, "messages": "[{role: user, content: [{type: image}, {type: text, text: prompt_clevr_cot.txt.format(question)}]}]", "prompt_block_sha256": "sha256:d88becf2d8bd00d8ec1678786317304b268d729ebad9e519ca8c5f281cb31d8b", "samples_per_seed": 1, "strategy": "greedy", "temperature": 0.0, "top_p": 1.0}
+evaluators:
+  - id: vqa.clevr_items@0.1
+    # EXT-6: SHA-256 of the canonical JSON {evaluator, metric, direction, scorer}; scorer clevr_exact_match_own_parser
+    # with code_sha256 = the composite scorer hash, as renamed for ptc-hub 0.2.0 (sha256:d5581fbf...; before the rename
+    # sha256:f3eaba29..., see rename_proof).
+    manifest_hash: "sha256:61f7222e79925161921efb01ecb60c4164fc40fc93953422a2c765f3c094cf3b"
+multiplicity:
+  plan: single_gate
+  family: null
+analysis_code_version: ptc-hub 0.2.0
+bootstrap:
+  replicates: 10000
+  seed: 20261114
+pairing:
+  max_unpaired: 0
+min_paired: 10
+contamination:
+  allow_exact_overlap: false
+post_hoc: false
+rename_proof:                 # R17-3: score_vqa.py changed only by the ptc-hub 0.2.0 name map
+  - evaluator: vqa.clevr_items@0.1
+    code_sha256_before: "sha256:f3eaba291f439827fa93115b6aebed5d18e8c5b0054013c87f3292de2719abaf"
+    files: [scorer-before/score_vqa.py]
+    composite: true

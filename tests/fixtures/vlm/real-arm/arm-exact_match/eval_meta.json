@@ -1,0 +1,46 @@
+{
+  "adapter": "nemo_rl_vlm",
+  "checkpoint": {
+    "base_model_hash": null,
+    "model_hash": null
+  },
+  "created_at": "2026-11-14T17:12:25Z",
+  "direction": "higher_is_better",
+  "env_version_sha256": null,
+  "eval_seeds": [
+    11
+  ],
+  "evaluator_id": "vqa.clevr_items@0.1",
+  "framework": {
+    "name": "vllm",
+    "version": "0.29.0"
+  },
+  "item_set_hash": null,
+  "metric": "exact_match",
+  "normalizer_sha256": null,
+  "sampler": {
+    "backend": "vllm",
+    "chat_template": "checkpoint processor chat template, add_generation_prompt=True, no template kwargs (Qwen3.5 non-thinking)",
+    "max_model_len": 1024,
+    "max_new_tokens": 512,
+    "messages": "[{role: user, content: [{type: image}, {type: text, text: prompt_clevr_cot.txt.format(question)}]}]",
+    "prompt_block_sha256": "sha256:d88becf2d8bd00d8ec1678786317304b268d729ebad9e519ca8c5f281cb31d8b",
+    "samples_per_seed": 1,
+    "strategy": "greedy",
+    "temperature": 0.0,
+    "top_p": 1.0
+  },
+  "sampler_hash": "sha256:c7607bf163aa15428f34871a39b0012e2cdc4f6e5869cdd1e3881585e53df8b9",
+  "schema": "ptc_skel.item_eval",
+  "schema_version": "1.0",
+  "score_range": [
+    0,
+    1
+  ],
+  "scorer": {
+    "code_sha256": "sha256:f3eaba291f439827fa93115b6aebed5d18e8c5b0054013c87f3292de2719abaf",
+    "name": "clevr_exact_match_own_parser",
+    "version": "clevr_exact_v1; python 3.15.2",
+    "weights_sha256": null
+  }
+}

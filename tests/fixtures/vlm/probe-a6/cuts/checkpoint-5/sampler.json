@@ -1,0 +1,10 @@
+{
+  "chat_template": "checkpoint processor chat template, add_generation_prompt=True, no template kwargs (Qwen3.5 non-thinking)",
+  "max_model_len": 1024,
+  "max_new_tokens": 512,
+  "messages": "[{role: user, content: [{type: image}, {type: text, text: prompt_clevr_cot.txt.format(question)}]}]",
+  "samples_per_seed": 1,
+  "strategy": "greedy",
+  "temperature": 0.0,
+  "top_p": 1.0
+}

@@ -1,0 +1,4 @@
+# The sdist carries the package and its license files; tests, fixtures and runtime/ live in the repository.
+prune tests
+prune runtime
+prune results

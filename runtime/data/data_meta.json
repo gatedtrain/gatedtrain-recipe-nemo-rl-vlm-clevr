@@ -1,0 +1,50 @@
+{
+  "checks": {
+    "train_rows_dropped_by_overlap_filter": 0,
+    "train_vs_items_image_overlap": 0,
+    "train_vs_items_pair_overlap": 0,
+    "valA_vs_valB_image_overlap": 0
+  },
+  "counts": {
+    "images": 2321,
+    "items-valA": 500,
+    "items-valB": 500,
+    "train": 2000
+  },
+  "license": "source CLEVR-CoGenT v1.0, CC BY 4.0 (https://cs.stanford.edu/people/jcjohns/clevr/); the MMInstruction repackaging declares no licence",
+  "order": "items sampled first; training rows in source order after the overlap filter, first N_TRAIN, permuted once",
+  "schema": "ptc_mm.vlm_data",
+  "schema_version": "1.0",
+  "seed": 20261114,
+  "tags": [
+    "prototype",
+    "unpromotable"
+  ],
+  "train_answers": {
+    "0": 440,
+    "1": 303,
+    "10": 70,
+    "2": 216,
+    "3": 161,
+    "4": 108,
+    "5": 76,
+    "6": 68,
+    "7": 74,
+    "8": 65,
+    "9": 65,
+    "no": 229,
+    "yes": 125
+  },
+  "train_file_sha256": "sha256:3322b81e7377b1da31d8a8ccffcc3201437466bd3c56bfe25491ab9dd63abe92",
+  "train_source": {
+    "bytes": 333065475,
+    "files": {
+      "data/train-00000-of-00027.parquet": {
+        "bytes": 333065475,
+        "sha256": "sha256:5b348b96b9095cd9e1debe1e1a3cdf68484a6f83922bb6b71b21e4f3793d1550"
+      }
+    },
+    "repo": "MMInstruction/Clevr_CoGenT_TrainA_70K_Complex",
+    "revision": "d079bf102e8fde42032b229043f809586cbfb765"
+  }
+}

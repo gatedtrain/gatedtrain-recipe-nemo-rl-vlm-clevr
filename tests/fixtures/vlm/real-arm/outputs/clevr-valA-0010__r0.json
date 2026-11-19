@@ -1,0 +1,17 @@
+{
+  "item": "clevr-valA-0010",
+  "parsed_answer": "4",
+  "question": "What number of blue cubes are both right of the red metallic cylinder and behind the tiny purple thing?",
+  "reference": "2",
+  "repeat": 0,
+  "response": "Let's break down the spatial relationships in the image.\n\n1.  **Identify the red metallic cylinder**: It is located in the upper-middle area, slightly to the left.\n2.  **Identify the tiny purple thing**: It is a small purple cylinder located in the lower-left area, near the small blue cube.\n3.  **Identify the blue cubes**:\n    *   There is a large blue cube on the left side.\n    *   There is a large blue cube in the front center.\n    *   There is a large blue cube on the right side.\n    *   There is a small blue cube on the far left, partially behind the purple cylinder.\n4.  **Check the condition**: \"right of the red metallic cylinder and behind the tiny purple thing\".\n    *   The large blue cube on the left is to the *left* of the red cylinder.\n    *   The large blue cube in the front center is to the *left* of the red cylinder.\n    *   The large blue cube on the right is to the *right* of the red cylinder.\n    *   The small blue cube on the far left is to the *left* of the red cylinder.\n    *   The large blue cube in the front center is to the *left* of the red cylinder.\n    *   The large blue cube on the right is to the *right* of the red cylinder.\n    *   The small blue cube on the far left is to the *left* of the red cylinder.\n    *   The large blue cube in the front center is to the *left* of the red cylinder.\n    *   The large blue cube on the right is to the *right* of the red cylinder.\n    *   The small blue cube on the far left is to the *left* of the red cylinder.\n    *   The large blue cube in the front center is to the *left* of the red cylinder.\n    *   The large blue cube on the right is to the *right* of the red cylinder.\n    *   The small blue cube on the far left is to the *left* of the red cylinder.\n    *   The large blue cube in the front center is to the *left* of the red cylinder.\n    *   The large blue cube on the right is to the *right* of the red cylinder.\n    *   The",
+  "score": 0.0,
+  "seed": 11,
+  "sub_metrics": {
+    "answer_found": 1,
+    "answer_tagged": 0,
+    "is_yes_no": 0,
+    "n_new_tokens": 512,
+    "truncated": 1
+  }
+}

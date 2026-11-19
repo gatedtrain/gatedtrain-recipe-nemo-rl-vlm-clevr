@@ -1,0 +1,4 @@
+# Area "VLM" GRPO stage trainer config for ext-collect (EXT-2): the adapter and the launch profile.
+# prototype, unpromotable.
+backend: nemo_rl_vlm
+profile: full

@@ -1,0 +1,42 @@
+{
+  "deployable": [
+    "chat_template.jinja",
+    "config.json",
+    "model-00001-of-00001.safetensors",
+    "model.safetensors.index.json",
+    "preprocessor_config.json",
+    "sampler.json",
+    "tokenizer.json",
+    "tokenizer_config.json",
+    "video_preprocessor_config.json"
+  ],
+  "examples_consumed": 80,
+  "file_origin": {
+    "chat_template.jinja": "nemo_rl policy/tokenizer",
+    "preprocessor_config.json": "base model (vision tower frozen)",
+    "tokenizer.json": "nemo_rl policy/tokenizer",
+    "tokenizer_config.json": "nemo_rl policy/tokenizer",
+    "video_preprocessor_config.json": "base model (vision tower frozen)"
+  },
+  "files": {
+    "base_ref.json": "sha256:9a3b3a7862b2d4cdbf7f74203df4968ecbea76e523e7ed6d0320ca137debfec3",
+    "chat_template.jinja": "sha256:273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80",
+    "config.json": "sha256:6507694454e45c5f777b18fd81f58791b4223d0f4bf752ce8914c139852b9544",
+    "model-00001-of-00001.safetensors": "sha256:d9ac466a602a7d7625928ecd201f1d29a07c2268583602527117c894c737e3ad",
+    "model.safetensors.index.json": "sha256:832ade5cd8af38619f8387e2bf03927b7ce06c27630a76400754f63bcd500c08",
+    "preprocessor_config.json": "sha256:27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516",
+    "sampler.json": "sha256:7e8cb70a2a46793fc71d3c4af80a52f1497e49eb252fc10c2440b32c00fd1ecd",
+    "tokenizer.json": "sha256:8de4da9ebbd797d3fa6e336f7f7315ed896d5f3034b74c96bff7615e801c8777",
+    "tokenizer_config.json": "sha256:bee8eba30f0eb4af73c0fe2cd06d0f89b657d7819941c438157ec42f7c80ea87",
+    "training_info.json": "sha256:1d6c61a61dfd68b131ffe0d6a025a61d540e9d7177a0ad6938c624e9bbd7c6fc",
+    "video_preprocessor_config.json": "sha256:7768af27c1fafa9cc9011c1dc20067e03f8915e03b63504550e11d5066986d13"
+  },
+  "global_step": 5,
+  "nemo_rl_step_dir": "step_5",
+  "profile": "smoke",
+  "schema": "ptc_mm.vlm_cut",
+  "schema_version": "1.0",
+  "script_sha256": "sha256:f642defc80c93da8bcc6c253d063b5631345266d741cfcf6df98282ca04c9114",
+  "seed": 7100,
+  "stage": "vlm_grpo"
+}

@@ -1,0 +1,17 @@
+{
+  "item": "clevr-valA-0001",
+  "parsed_answer": "1",
+  "question": "How many items are there in the described scene?",
+  "reference": "8",
+  "repeat": 0,
+  "response": "1",
+  "score": 0.0,
+  "seed": 11,
+  "sub_metrics": {
+    "answer_found": 1,
+    "answer_tagged": 0,
+    "is_yes_no": 0,
+    "n_new_tokens": 2,
+    "truncated": 0
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "answer_found_share": 1.0,
+  "answer_tagged_share": 0.0,
+  "degeneracy_mm38": {
+    "exact_match": {
+      "binary": true,
+      "pass": true
+    }
+  },
+  "error_classes": [],
+  "errors": 0,
+  "exact_match": {
+    "mean": 0.44,
+    "n": 100,
+    "sd": 0.49888765156985887,
+    "share_one": 0.44
+  },
+  "gen_backend": "vllm",
+  "items": 100,
+  "mean_new_tokens": 179.83,
+  "missing_hashes": [
+    "model_hash",
+    "item_set_hash"
+  ],
+  "model_dir": "/inputs/cut",
+  "parsed_answers": {
+    "0": 15,
+    "1": 39,
+    "10": 5,
+    "2": 9,
+    "3": 4,
+    "30": 1,
+    "4": 2,
+    "5": 1,
+    "no": 12,
+    "yes": 12
+  },
+  "repeats": 1,
+  "responses": 100,
+  "sampler_hash": "sha256:c7607bf163aa15428f34871a39b0012e2cdc4f6e5869cdd1e3881585e53df8b9",
+  "truncated_share": 0.05,
+  "wall_seconds": 0.0
+}

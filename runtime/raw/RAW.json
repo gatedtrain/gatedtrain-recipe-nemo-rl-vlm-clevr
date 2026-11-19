@@ -1,0 +1,44 @@
+{
+  "license": "source CLEVR-CoGenT v1.0, CC BY 4.0 (https://cs.stanford.edu/people/jcjohns/clevr/); the MMInstruction repackaging declares no licence",
+  "schema": "ptc_mm.vlm_raw",
+  "schema_version": "1.0",
+  "splits": {
+    "trainA": {
+      "bytes": 333065475,
+      "files": {
+        "data/train-00000-of-00027.parquet": {
+          "bytes": 333065475,
+          "sha256": "sha256:5b348b96b9095cd9e1debe1e1a3cdf68484a6f83922bb6b71b21e4f3793d1550"
+        }
+      },
+      "repo": "MMInstruction/Clevr_CoGenT_TrainA_70K_Complex",
+      "revision": "d079bf102e8fde42032b229043f809586cbfb765"
+    },
+    "valA": {
+      "bytes": 410574295,
+      "files": {
+        "data/train-00000-of-00002.parquet": {
+          "bytes": 410574295,
+          "sha256": "sha256:6ce2e1253997a14b33a02c51add23a07394ba1c1bec0e80bbdb39fb7b8ef64df"
+        }
+      },
+      "repo": "MMInstruction/Clevr_CoGenT_ValA",
+      "revision": "f786093c7bb7b45684d8d5791e3fc8726a427233"
+    },
+    "valB": {
+      "bytes": 412024924,
+      "files": {
+        "data/train-00000-of-00002.parquet": {
+          "bytes": 412024924,
+          "sha256": "sha256:2c4f99fa069945a87a206b893c73cf651be955ec2fc032fc83a3fc7e63fb4af1"
+        }
+      },
+      "repo": "MMInstruction/Clevr_CoGenT_ValB",
+      "revision": "a844ddba31aae3655be1979935ccb0c43123ec62"
+    }
+  },
+  "tags": [
+    "prototype",
+    "unpromotable"
+  ]
+}
