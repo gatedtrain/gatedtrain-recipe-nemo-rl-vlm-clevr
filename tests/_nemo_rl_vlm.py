@@ -419,19 +419,23 @@ def response(kind: str, answer: str) -> str:
     return "I cannot tell from the image."
 
 
+def _load_score_vqa():
+    """The runtime's score_vqa.py (standard library only), loaded by path: the fixtures score with the real parser,
+    so a scorer change reaches them (a copy here had drifted: it lacked the number words eleven to twenty)."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("_fixture_score_vqa", Path(AREA7) / "score_vqa.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+SCORE_VQA = _load_score_vqa()
+
+
 def parse(text: str) -> tuple[str | None, int]:
     """score_vqa.py parse_answer, for the fixture's responses (answer, answer_tagged)."""
-    import re
-    words = "zero one two three four five six seven eight nine ten".split()
-    tok = re.compile(r"\b(\d+|" + "|".join(words) + r"|yes|no)\b", re.I)
-    if "</think>" in text:
-        text = text.rsplit("</think>", 1)[1]
-    blocks = re.findall(r"<answer>(.*?)</answer>", text, re.S | re.I)
-    toks = tok.findall(blocks[-1] if blocks else text)
-    if not toks:
-        return None, int(bool(blocks))
-    t = toks[-1].lower()
-    return (str(words.index(t)) if t in words else str(int(t)) if t.isdigit() else t), int(bool(blocks))
+    got = SCORE_VQA.parse_answer(text)
+    return got["answer"], got["answer_tagged"]
 
 
 def gen_meta(model_dir: Path, items_dir: Path, n_items: int) -> dict:
