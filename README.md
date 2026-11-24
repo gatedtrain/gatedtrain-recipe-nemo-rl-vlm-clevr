@@ -1,23 +1,51 @@
 # gatedtrain recipe: NeMo RL VLM GRPO on CLEVR-CoGenT
 
-A [gatedtrain](https://github.com/gatedtrain/gatedtrain) recipe: NeMo RL's synchronous VLM GRPO trains Qwen3.5-0.8B
-(full weights, vision tower frozen) on CLEVR-CoGenT TrainA questions, and gatedtrain gates the last cut against the base model on
-`exact_match` of 500 held-out ValA items (ValB, other colour-shape combinations, is reported as supporting only).
-Training, greedy vLLM generation and scoring all run in the derived NeMo RL image (`gatedtrain-a6-nemo-rl:1`, uid 1000,
-`--network none`). Prototype.
+This recipe teaches a small vision-language model to answer questions about CLEVR-CoGenT images, and lets
+[gatedtrain](https://github.com/gatedtrain/gatedtrain) decide whether the trained model really is better than the one
+it started from. NeMo RL's synchronous VLM GRPO trains Qwen3.5-0.8B (full weights, vision tower frozen) on CLEVR-CoGenT
+TrainA questions, on one GPU. gatedtrain gates the last cut against the base model on `exact_match` of 500 held-out
+ValA items, by a rule registered before training (ValB, other colour-shape combinations, is reported as supporting
+only). Training, greedy vLLM generation and scoring all run in the derived NeMo RL image (`gatedtrain-a6-nemo-rl:1`,
+uid 1000, `--network none`).
 
-The gate files under `results/` cite the maintainers' decision record (`decisions/MVP-MULTIMODAL.md`, "Area 7
-decisions") and code comments cite the framework's review rounds ("Review 9 M1"): those records are not published.
-`runtime/README.md` records the area 7 decisions this recipe depends on.
+A recipe is a ready-made external run for gatedtrain: the training code with its pinned environment, plus an
+*adapter*, the small plugin through which gatedtrain reads the run's outputs. gatedtrain does not start the training;
+you run it.
 
-## Layout
+This is a prototype: the result below is one registered run, not a benchmark claim.
 
-| Path | What |
+## How it works
+
+```mermaid
+flowchart LR
+    fetch["fetch_models.py, make_data.py:<br/>Qwen3.5-0.8B and CLEVR-CoGenT, pinned"] --> train["run_vlm_nemo.py in a container<br/>(NeMo RL VLM GRPO, vlm_env_logged.py)"]
+    train --> cuts["Cuts and<br/>per-sample logs"]
+    cuts --> eval["gen_vqa.py and score_vqa.py: base model and<br/>last cut on 500 ValA items"]
+    eval --> arms["Arm files: per-item results"]
+    arms --> collect["gatedtrain ext-collect"]
+    cuts -->|"read through the adapter nemo_rl_vlm"| collect
+    collect --> gate{"Gate"}
+    gate --> report["Gate report, consumption ledger"]
+```
+
+`gatedtrain ext-launch` checks the run request and prints the container command; you run it. The steps, flags and
+arm files are explained in gatedtrain's [External runs](https://gatedtrain.github.io/gatedtrain/external-runs/) guide.
+
+## Result
+
+One registered run, 60 steps (16 prompts x 8 generations each, cuts 20, 40 and 60) on one GPU, 0.40 GPU-hours:
+
+| | `exact_match` on 500 ValA items |
 |---|---|
-| `src/gatedtrain_recipe_nemo_rl_vlm_clevr/` | the gatedtrain adapter `nemo_rl_vlm` (`adapter.py`) and its registry rows (`rows.py`), registered through the `gatedtrain.adapters` entry point |
-| `runtime/` | what runs in the container: `run_vlm_nemo.py` (launcher), `ptc_vlm_hooks.py` (cuts, run record), `vlm_env_logged.py` (row-id processor and logging VLM environment), `gen_vqa.py` (vLLM generation), `score_vqa.py` (standard-library answer parser), the prompt file, the host-side `fetch_models.py` and `make_data.py`, the pins (`models/MODELS.json`, `raw/RAW.json`), the data metadata and the two registered item sets (`items-valA/`, `items-valB/`) |
-| `tests/` | the adapter's tests on fixture runs (no GPU, no model needed) and gatedtrain's conformance check |
-| `results/2026-11-14/` | the gate files of the published result (redacted copies, host paths replaced by `<data-root>`) |
+| Base (Qwen3.5-0.8B) | 0.404 |
+| Trained (cut 60) | 0.730 |
+| Gate | **PASS**: +0.326, 95% cluster-bootstrap interval [0.270, 0.382] |
+
+The supporting ValB score (not gating) went from 0.392 to 0.674. Re-judged with gatedtrain 0.3.0 under a version-only
+amendment, the gate still reports PASS with the same statistics.
+
+`RESULT.md` has the full record: the registration, power, overlap with training, the impact query and the
+re-collections. The gate files are under `results/2026-11-14/`.
 
 ## Setup
 
@@ -55,6 +83,15 @@ unchanged and prints the local hash instead (`train_file_sha256 here: sha256:...
 metadata. A run you train from this runtime records the local hash in its own `run_args.json`, which the adapter checks
 against `data/train.jsonl`, not against `data_meta.json`.
 
+## Layout
+
+| Path | What |
+|---|---|
+| `src/gatedtrain_recipe_nemo_rl_vlm_clevr/` | the gatedtrain adapter `nemo_rl_vlm` (`adapter.py`) and its registry rows (`rows.py`), registered through the `gatedtrain.adapters` entry point |
+| `runtime/` | what runs in the container: `run_vlm_nemo.py` (launcher), `ptc_vlm_hooks.py` (cuts, run record), `vlm_env_logged.py` (row-id processor and logging VLM environment), `gen_vqa.py` (vLLM generation), `score_vqa.py` (standard-library answer parser), the prompt file, the host-side `fetch_models.py` and `make_data.py`, the pins (`models/MODELS.json`, `raw/RAW.json`), the data metadata and the two registered item sets (`items-valA/`, `items-valB/`) |
+| `tests/` | the adapter's tests on fixture runs (no GPU, no model needed) and gatedtrain's conformance check |
+| `results/2026-11-14/` | the gate files of the published result (redacted copies, host paths replaced by `<data-root>`) |
+
 ## Tests
 
 ```bash
@@ -64,6 +101,10 @@ python -m unittest discover -s tests -t tests
 Tests that read regenerated files (the base model, the training shards) skip when they are absent. One test checks
 that another recipe's training stage type (`rl.nemo_rl_env@0.1`) is refused for this adapter; it skips unless
 `gatedtrain-recipe-nemo-rl-cad` is installed beside this recipe.
+
+The gate files under `results/` cite the maintainers' decision record (`decisions/MVP-MULTIMODAL.md`, "Area 7
+decisions") and code comments cite the framework's review rounds ("Review 9 M1"): those records are not published.
+`runtime/README.md` records the area 7 decisions this recipe depends on.
 
 ## Data and licenses
 
@@ -87,7 +128,3 @@ This repository is licensed under the Apache License, Version 2.0 (`LICENSE`); s
 contains is listed with its license in `THIRD_PARTY_NOTICES.md`; models, data and images the recipe downloads or
 builds are listed under "Data and licenses" above. Names of third-party projects and products are trademarks of
 their owners; this project is not affiliated with or endorsed by them.
-
-## Result
-
-See `RESULT.md`.
