@@ -3,7 +3,7 @@
 This recipe teaches a small vision-language model to answer questions about CLEVR-CoGenT images, and lets
 [gatedtrain](https://github.com/gatedtrain/gatedtrain) decide whether the trained model really is better than the one
 it started from. NeMo RL's synchronous VLM GRPO trains Qwen3.5-0.8B (full weights, vision tower frozen) on CLEVR-CoGenT
-TrainA questions, on one GPU. gatedtrain gates the last cut against the base model on `exact_match` of 500 held-out
+TrainA questions. gatedtrain gates the last cut against the base model on `exact_match` of 500 held-out
 ValA items, by a rule registered before training (ValB, other colour-shape combinations, is reported as supporting
 only). Training, greedy vLLM generation and scoring all run in the derived NeMo RL image (`gatedtrain-a6-nemo-rl:1`,
 uid 1000, `--network none`).
@@ -33,7 +33,7 @@ arm files are explained in gatedtrain's [External runs](https://gatedtrain.githu
 
 ## Result
 
-One registered run, 60 steps (16 prompts x 8 generations each, cuts 20, 40 and 60) on one GPU, 0.40 GPU-hours:
+One registered run, 60 steps (16 prompts x 8 generations each, cuts 20, 40 and 60), 0.40 GPU-hours:
 
 | | `exact_match` on 500 ValA items |
 |---|---|
@@ -42,7 +42,7 @@ One registered run, 60 steps (16 prompts x 8 generations each, cuts 20, 40 and 6
 | Gate | **PASS**: +0.326, 95% cluster-bootstrap interval [0.270, 0.382] |
 
 The supporting ValB score (not gating) went from 0.392 to 0.674. Re-judged with gatedtrain 0.3.0 under a version-only
-amendment, the gate still reports PASS with the same statistics.
+amendment (not post hoc), the gate still reports PASS with the same statistics.
 
 `RESULT.md` has the full record: the registration, power, overlap with training, the impact query and the
 re-collections. The gate files are under `results/2026-11-14/`.
